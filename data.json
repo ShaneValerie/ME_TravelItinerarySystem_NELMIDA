@@ -1,0 +1,34 @@
+[
+    {
+        "id": 1,
+        "activity": "Visit USC Lb 483",
+        "location": "USC Bunzel",
+        "date": "2026-11-01",
+        "start_time": "09:00",
+        "category": "Sightseeing"
+    },
+    {
+        "id": 2,
+        "activity": "Library Study",
+        "location": "USC LRC",
+        "date": "2026-10-31",
+        "start_time": "08:00",
+        "category": "Adventure"
+    },
+    {
+        "id": 3,
+        "activity": "BCT Pickle",
+        "location": "USC BCT",
+        "date": "2026-10-31",
+        "start_time": "01:00",
+        "category": "Adventure"
+    },
+    {
+        "id": 4,
+        "activity": "BCT Pickle",
+        "location": "USC BCT",
+        "date": "2026-10-30",
+        "start_time": "13:00",
+        "category": "Adventure"
+    }
+]

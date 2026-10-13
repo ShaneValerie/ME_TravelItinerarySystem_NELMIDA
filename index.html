@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Travel Itinerary</title>
+</head>
+<body>
+    <h2>Travel Itinerary</h2>
+
+    <h3>Add Activity</h3>
+    <input type="text" id="activity" placeholder="Activity">
+    <input type="text" id="location" placeholder="Location">
+    <input type="date" id="date">
+    <input type="time" id="start_time">
+    <input type="text" id="category" placeholder="Category">
+    <button onclick="addActivity()">Add</button>
+
+    <h3>Search Activity</h3>
+    <input type="number" id="search-id" placeholder="Enter Activity ID">
+    <button onclick="findActivity()">Search</button>
+    <button onclick="loadActivities()">View All</button>
+
+    <p id="message"></p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Start Time</th>
+                <th>ID</th>
+                <th>Activity</th>
+                <th>Location</th>
+                <th>Category</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="activity-table"></tbody>
+    </table>
+
+    <script>
+        function renderTable(activities){
+            const tbody = document.getElementById('activity-table')
+            tbody.innerHTML = ''
+            activities.forEach(item =>{
+                tbody.innerHTML += `<tr>
+                    <td>${item.date}</td>
+                    <td>${item.start_time}</td>
+                    <td>${item.id}</td>
+                    <td>${item.activity}</td>
+                    <td>${item.location}</td>
+                    <td>${item.category}</td>
+                    <td><button onclick="deleteActivity(${item.id})">Delete</button></td>
+                </tr>`
+            })
+        }
+
+        function loadActivities(){
+            fetch('/api/activities')
+                .then(res => res.json())
+                .then(activities => renderTable(activities))
+        }
+
+        function findActivity(){
+            const id = document.getElementById('search-id').value
+
+            if (id === '') {
+                return loadActivities()
+            }
+
+            fetch('/api/activities/' + id)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.message) {
+                        document.getElementById('message').textContent = data.message
+                        renderTable([])
+                    } else {
+                        document.getElementById('message').textContent = ''
+                        renderTable([data])
+                    }
+                })
+        }
+
+        function addActivity(){
+            const newActivity ={
+                activity: document.getElementById('activity').value,
+                location: document.getElementById('location').value,
+                date: document.getElementById('date').value,
+                start_time: document.getElementById('start_time').value,
+                category: document.getElementById('category').value
+            }
+
+            fetch('/api/activities',{
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newActivity)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.message) {
+                        document.getElementById('message').textContent = data.message
+                    } else {
+                        document.getElementById('message').textContent = 'Activity added'
+                        document.getElementById('activity').value = ''
+                        document.getElementById('location').value = ''
+                        document.getElementById('date').value = ''
+                        document.getElementById('start_time').value = ''
+                        document.getElementById('category').value = ''
+                    }
+                    loadActivities()
+                })
+        }
+
+        function deleteActivity(id){
+            fetch('/api/activities/' + id, { method: 'DELETE' })
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('message').textContent = data.message
+                    loadActivities()
+                })
+        }
+
+        loadActivities()
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
